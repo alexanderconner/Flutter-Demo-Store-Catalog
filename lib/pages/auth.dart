@@ -8,11 +8,13 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  String _username;
-  String _password;
-  bool _acceptTerms = false;
+  final Map<String, dynamic> _formData = {
+    'email': null,
+    'password': null,
+    'acceptTerms': false,
+  };
 
-  final _usernameKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _loginKey = GlobalKey<FormState>();
 
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
@@ -26,10 +28,21 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildEmailTextField() {
     return TextFormField(
       decoration: InputDecoration(
-          labelText: "Username", filled: true, fillColor: Colors.white),
+          labelText: "Email", filled: true, fillColor: Colors.white),
+      autocorrect: false,
       autofocus: true,
       keyboardType: TextInputType.emailAddress,
       maxLength: 30,
+      validator: (String value) {
+        if (value.isEmpty ||
+            !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                .hasMatch(value)) {
+          return "Email is required";
+        }
+      },
+      onSaved: (String value) {
+        _formData['email'] = value;
+      },
     );
   }
 
@@ -40,25 +53,34 @@ class _AuthPageState extends State<AuthPage> {
       decoration: InputDecoration(
           labelText: "Password", filled: true, fillColor: Colors.white),
       obscureText: true,
+      validator: (String value) {
+        if (value.isEmpty || value.length < 8) {
+          return "Password is required and must be at least 8 characters";
+        }
+      },
+      onSaved: (String value) {
+        _formData['password'] = value;
+      },
     );
   }
 
   Widget _buildAcceptTermsSwitch() {
     return SwitchListTile(
-      value: _acceptTerms,
+      value: _formData['acceptTerms'],
       title: Text("Accept Terms"),
       onChanged: (bool value) {
         setState(() {
-          _acceptTerms = value;
+          _formData['acceptTerms'] = value;
         });
       },
     );
   }
 
   void _submitForm() {
-    print(_username);
-    print(_password);
-    if (_acceptTerms) {
+    if (!_loginKey.currentState.validate() || !_formData['acceptTerms']) {
+      return;
+    } else {
+      _loginKey.currentState.save();
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
@@ -74,33 +96,39 @@ class _AuthPageState extends State<AuthPage> {
       appBar: AppBar(
         title: Text('Login'),
       ),
-      body: Container(
-        decoration: BoxDecoration(image: _buildBackgroundImage()),
-        padding: EdgeInsets.all(20.0),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              //Set the width of this container to 80 percent of this screen width
-              width: targetWidth,
-              child: Form(
-                child: Column(
-                  children: <Widget>[
-                    _buildEmailTextField(),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    _buildEmailTextField(),
-                    _buildAcceptTermsSwitch(),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    RaisedButton(
-                      color: Theme.of(context).accentColor,
-                      textColor: Colors.white,
-                      child: Text('Login'),
-                      onPressed: () => _submitForm(),
-                    ),
-                  ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Container(
+          decoration: BoxDecoration(image: _buildBackgroundImage()),
+          padding: EdgeInsets.all(20.0),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Container(
+                //Set the width of this container to 80 percent of this screen width
+                width: targetWidth,
+                child: Form(
+                  key: _loginKey,
+                  child: Column(
+                    children: <Widget>[
+                      _buildEmailTextField(),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      _buildPasswordTextField(),
+                      _buildAcceptTermsSwitch(),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      RaisedButton(
+                        color: Theme.of(context).accentColor,
+                        textColor: Colors.white,
+                        child: Text('Login'),
+                        onPressed: () => _submitForm(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

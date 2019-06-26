@@ -53,7 +53,7 @@ class ProductPage extends StatelessWidget {
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(product['image']),
+              Image.asset(product['image'] == null ? 'assets/food.jpg' : product['image']),
               Container(
                 child: ProductTitle(product['title']),
                 padding: EdgeInsets.symmetric(vertical: 10.0),

@@ -39,7 +39,7 @@ class ProductCard extends StatelessWidget {
       color: Theme.of(context).cardColor,
       child: Column(
         children: <Widget>[
-          Image.asset(product['image']),
+          Image.asset(product['image'] == null ? 'assets/food.jpg' : product['image']),
           //SizedBox(height: 10.0,),
           Container(
             padding: EdgeInsets.only(top: 10),
