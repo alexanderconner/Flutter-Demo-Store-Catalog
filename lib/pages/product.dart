@@ -4,9 +4,10 @@ import 'dart:async';
 import '../widgets/dialogs/delete_confirm.dart';
 import '../widgets/products/product_title.dart';
 import '../widgets/products/address_tag.dart';
+import 'package:flutter_course_01/models/product.dart';
 
 class ProductPage extends StatelessWidget {
-  final Map<String, dynamic> product;
+  final Product product;
 
   ProductPage(this.product);
 
@@ -29,7 +30,7 @@ class ProductPage extends StatelessWidget {
                 color: Theme.of(context).accentColor,
                 borderRadius: BorderRadius.circular(5.0)),
             child: Text(
-              '\$${product['price'].toString()}',
+              '\$${product.price.toString()}',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -48,14 +49,16 @@ class ProductPage extends StatelessWidget {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: Text(product['title']),
+            title: Text(product.title),
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(product['image'] == null ? 'assets/food.jpg' : product['image']),
+              Image.asset(product.imageURL == null
+                  ? 'assets/food.jpg'
+                  : product.imageURL),
               Container(
-                child: ProductTitle(product['title']),
+                child: ProductTitle(product.title),
                 padding: EdgeInsets.symmetric(vertical: 10.0),
               ),
               Container(
@@ -64,14 +67,7 @@ class ProductPage extends StatelessWidget {
               ),
               Container(
                   padding: EdgeInsets.all(10),
-                  child: Text(product['description'])),
-              Container(
-                padding: EdgeInsets.all(10),
-                child: RaisedButton(
-                    color: Theme.of(context).buttonColor,
-                    child: Text('DELETE'),
-                    onPressed: () => DeleteConfirm.showDeleteDialog(context)),
-              )
+                  child: Text(product.description)),
             ],
           ),
         ));

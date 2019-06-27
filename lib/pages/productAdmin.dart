@@ -5,9 +5,10 @@ import 'package:flutter_course_01/pages/product_edit.dart';
 import './product_edit.dart';
 import './productList.dart';
 import '../widgets/drawer/admin_drawer.dart';
+import '../models/product.dart';
 
 class ProductAdminPage extends StatelessWidget {
-  final List<Map<String, dynamic>> products;
+  final List<Product> products;
   final Function addItem;
   final Function deleteItem;
   final Function updateItem;

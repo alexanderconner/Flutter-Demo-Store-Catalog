@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 
 import '../widgets/products/products.dart';
 import '../widgets/drawer/home_drawer.dart';
+import '../models/product.dart';
 
 class ProductsHomePage extends StatelessWidget {
 
-  final List<Map<String, dynamic>> products;
+  final List<Product> products;
 
   ProductsHomePage(this.products);
 

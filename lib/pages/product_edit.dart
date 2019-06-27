@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/helpers/ensure-visible.dart';
+import '../models/product.dart';
 
 /**
  * A form for both adding and updating existing products. 
@@ -9,7 +10,7 @@ import '../widgets/helpers/ensure-visible.dart';
  * to update that product list. 
  */
 class ProductEditPage extends StatefulWidget {
-  final Map<String, dynamic> product;
+  final Product product;
   final Function updateProduct;
   final Function addProduct;
   final int productIndex;
@@ -45,7 +46,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
           labelText: "Product Title",
         ),
         autofocus: true,
-        initialValue: widget.product == null ? '' : widget.product['title'],
+        initialValue: widget.product == null ? '' : widget.product.title,
         maxLength: 30,
         validator: (String value) {
           if (value.isEmpty || value.length < 5) {
@@ -66,8 +67,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         focusNode: _descriptionFocusNode,
         decoration: InputDecoration(labelText: "Enter Description"),
         maxLines: 4,
-        initialValue:
-            widget.product == null ? '' : widget.product['description'],
+        initialValue: widget.product == null ? '' : widget.product.description,
         validator: (String value) {
           if (value.isEmpty || value.length < 10) {
             return "Descripton is required and should be at least 10 characters long";
@@ -87,7 +87,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         focusNode: _priceFocusNode,
         decoration: InputDecoration(labelText: "Price"),
         initialValue:
-            widget.product == null ? '' : widget.product['price'].toString(),
+            widget.product == null ? '' : widget.product.price.toString(),
         keyboardType: TextInputType.number,
         validator: (String value) {
           if (value.isEmpty ||
@@ -144,10 +144,15 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _formData['image'] = 'assets/food.jpg';
       }
       _formKey.currentState.save();
+      Product newProduct = Product(
+          title: _formData['title'],
+          description: _formData['description'],
+          price: _formData['price'],
+          imageURL: _formData['image']);
       if (widget.product == null) {
-        widget.addProduct(_formData);
+        widget.addProduct(newProduct);
       } else {
-        widget.updateProduct(widget.productIndex, _formData);
+        widget.updateProduct(widget.productIndex, newProduct);
       }
 
       Navigator.pushReplacementNamed(context, '/home');

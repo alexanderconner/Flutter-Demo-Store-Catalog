@@ -5,6 +5,7 @@ import './pages/auth.dart';
 import 'pages/productsHome.dart';
 import './pages/productAdmin.dart';
 import './pages/product.dart';
+import './models/product.dart';
 
 main() {
   // debugPaintSizeEnabled =true;
@@ -21,7 +22,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List<Map<String, dynamic>> _products = [];
+  List<Product> _products = [];
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void _addProduct(Map<String, dynamic> product) {
+  void _addProduct(Product product) {
     setState(() {
       _products.add(product);
     });
@@ -71,7 +72,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void _updateProduct(int index, Map<String, dynamic> product) {
+  void _updateProduct(int index, Product product) {
     setState(() {
       _products[index] = product;
     });
