@@ -102,34 +102,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  void _submitForm() {
-    //if any form field fails validation return, if valid
-    //save state and navigate to show the product
-    if (!_formKey.currentState.validate()) {
-      return;
-    } else {
-      //TODO add images later
-      if (_formData['image'] == null) {
-        _formData['image'] = 'assets/food.jpg';
-      }
-      _formKey.currentState.save();
-      if (widget.product == null) {
-        widget.addProduct(_formData);
-      } else {
-        widget.updateProduct(widget.productIndex, _formData);
-      }
-
-      Navigator.pushReplacementNamed(context, '/home');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildPageContent(BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.95;
     final targetPadding = (deviceWidth - targetWidth) / 2;
 
-    final Widget pageContent = Container(
+    return Container(
       width: targetWidth,
       margin: EdgeInsets.all(10.0),
       child: Form(
@@ -153,6 +131,32 @@ class _ProductEditPageState extends State<ProductEditPage> {
         ),
       ),
     );
+  }
+
+  void _submitForm() {
+    //if any form field fails validation return, if valid
+    //save state and navigate to show the product
+    if (!_formKey.currentState.validate()) {
+      return;
+    } else {
+      //TODO add images later
+      if (_formData['image'] == null) {
+        _formData['image'] = 'assets/food.jpg';
+      }
+      _formKey.currentState.save();
+      if (widget.product == null) {
+        widget.addProduct(_formData);
+      } else {
+        widget.updateProduct(widget.productIndex, _formData);
+      }
+
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget pageContent = _buildPageContent(context);
 
 //IF we aleady have a product, we are editing a product and must wrap the page in a Scaffold.
     return widget.product == null

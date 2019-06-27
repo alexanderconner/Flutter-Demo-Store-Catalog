@@ -9,6 +9,34 @@ class ProductListPage extends StatelessWidget {
 
   ProductListPage({this.updateProduct, this.products, this.deleteProduct});
 
+  Widget _buildEditButton(BuildContext context, int index) {
+    return IconButton(
+      icon: Icon(Icons.edit),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) {
+            return ProductEditPage(
+              updateProduct: updateProduct,
+              product: products[index],
+              productIndex: index,
+            );
+          }),
+        );
+      },
+    );
+  }
+
+  Widget _buildListTile(BuildContext context, index) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: AssetImage(products[index]['image']),
+      ),
+      title: Text(products[index]['title']),
+      subtitle: Text('\$${products[index]['price']}'),
+      trailing: _buildEditButton(context, index),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -19,7 +47,7 @@ class ProductListPage extends StatelessWidget {
             if (direction == DismissDirection.endToStart) {
               deleteProduct(index);
             } else if (direction == DismissDirection.startToEnd) {
-              print ("start  to end");
+              print("start  to end");
             } else {
               print("other swiping");
             }
@@ -28,27 +56,7 @@ class ProductListPage extends StatelessWidget {
           background: Container(color: Colors.red),
           child: Column(
             children: <Widget>[
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage(products[index]['image']),
-                ),
-                title: Text(products[index]['title']),
-                subtitle: Text('\$${products[index]['price']}'),
-                trailing: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (BuildContext context) {
-                        return ProductEditPage(
-                          updateProduct: updateProduct,
-                          product: products[index],
-                          productIndex: index,
-                        );
-                      }),
-                    );
-                  },
-                ),
-              ),
+              _buildListTile(context, index),
               Divider(),
             ],
           ),
