@@ -1,75 +1,80 @@
 import 'package:scoped_model/scoped_model.dart';
 
 import '../models/product.dart';
+import './connected_products_model.dart';
 
-mixin ScopedProductsModel on Model {
-  List<Product> _products = [];
-  int _selectedProductIndex;
+mixin ScopedProductsModel on ConnectedProducts {
   bool _showFavorites = false;
 
 //This get returns not the original list but a pointer to a new list copy,
 //this ensures we only edit the list usin the helper methods (add, update, delete etc)
-  List<Product> get products {
-    return List.from(_products);
+  List<Product> get allProducts {
+    return List.from(products);
   }
 
   List<Product> get displayedProducts {
     if (_showFavorites) {
-      return _products.where((Product product) => product.isFavorite).toList();
+      return products.where((Product product) => product.isFavorite).toList();
     }
-    return List.from(_products);
+    return List.from(products);
   }
 
   bool get displayFavoritesOnly {
     return _showFavorites;
   }
 
-  void addProduct(Product product) {
-    _products.add(product);
-    _selectedProductIndex = null;
-    notifyListeners();
-  }
-
   void deleteProduct() {
-    _products.removeAt(_selectedProductIndex);
-    _selectedProductIndex = null;
+    products.removeAt(selectedProductIndex);
+    selProductIndex = null;
     notifyListeners();
   }
 
-  void updateProduct(Product product) {
-    _products[_selectedProductIndex] = product;
-    _selectedProductIndex = null;
+  void updateProduct(
+      String title, String description, double price, String imageURL) {
+    final Product updatedProduct = Product(
+        title: title,
+        description: description,
+        price: price,
+        imageURL: imageURL,
+        userEmail: selectedProduct.userEmail,
+        userId: selectedProduct.userId);
+    products[selectedProductIndex] = updatedProduct;
+    selProductIndex = null;
     notifyListeners();
   }
 
   void selectProduct(int index) {
-    _selectedProductIndex = index;
+    selProductIndex = index;
   }
 
   int get selectedProductIndex {
-    return _selectedProductIndex;
+    return selProductIndex;
   }
 
   Product get selectedProduct {
-    if (_selectedProductIndex == null) {
+    if (selectedProductIndex == null) {
       return null;
     }
-    return _products[_selectedProductIndex];
+    return products[selectedProductIndex];
   }
 
   void toggleProductisFavorite() {
-    final bool isCurrentlyFavorite =
-        _products[_selectedProductIndex].isFavorite;
+    final bool isCurrentlyFavorite = products[selectedProductIndex].isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
-    final Product updatedProduct = Product(
-        title: selectedProduct.title,
-        description: selectedProduct.description,
-        price: selectedProduct.price,
-        imageURL: selectedProduct.imageURL,
-        isFavorite: newFavoriteStatus);
-    updateProduct(updatedProduct);
+    // final Product updatedProduct = Product(
+    //     title: selectedProduct.title,
+    //     description: selectedProduct.description,
+    //     price: selectedProduct.price,
+    //     userEmail: selectedProduct.userEmail,
+    //     userId: selectedProduct.userId,
+    //     imageURL: selectedProduct.imageURL,
+    //     isFavorite: newFavoriteStatus);
+    updateProduct(selectedProduct.title,
+        selectedProduct.description,
+        selectedProduct.price,
+        selectedProduct.userEmail);
     notifyListeners();
-    _selectedProductIndex = null;
+    selProductIndex = null;
   }
 
   void toggleDisplayMode() {

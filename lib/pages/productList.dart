@@ -26,10 +26,10 @@ class ProductListPage extends StatelessWidget {
       BuildContext context, MainModel model, int index) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: AssetImage(model.products[index].imageURL),
+        backgroundImage: AssetImage(model.allProducts[index].imageURL),
       ),
-      title: Text(model.products[index].title),
-      subtitle: Text('\$${model.products[index].price}'),
+      title: Text(model.allProducts[index].title),
+      subtitle: Text('\$${model.allProducts[index].price}'),
       trailing: _buildEditButton(context, index, model),
     );
   }

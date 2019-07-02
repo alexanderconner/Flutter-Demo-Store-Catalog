@@ -71,6 +71,7 @@ class ProductCard extends StatelessWidget {
           ),
           SizedBox(height: 10.0),
           AddressTag('San Francisco'),
+          Text(product.userEmail),
           _buildActionButtons(context)
         ],
       ),

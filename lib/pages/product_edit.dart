@@ -80,8 +80,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       child: TextFormField(
         focusNode: _priceFocusNode,
         decoration: InputDecoration(labelText: "Price"),
-        initialValue:
-            product == null ? '' : product.price.toString(),
+        initialValue: product == null ? '' : product.price.toString(),
         keyboardType: TextInputType.number,
         validator: (String value) {
           if (value.isEmpty ||
@@ -102,7 +101,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
         return RaisedButton(
           color: Theme.of(context).accentColor,
           child: Text("Save Product"),
-          onPressed: () => _submitForm(model.addProduct, model.updateProduct, model.selectedProductIndex),
+          onPressed: () => _submitForm(model.addProduct, model.updateProduct,
+              model.selectedProductIndex),
         );
       },
     );
@@ -135,7 +135,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  void _submitForm(Function addProduct, Function updateProduct, [int selectedProductIndex]) {
+  void _submitForm(Function addProduct, Function updateProduct,
+      [int selectedProductIndex]) {
     //if any form field fails validation return, if valid
     //save state and navigate to show the product
     if (!_formKey.currentState.validate()) {
@@ -146,15 +147,19 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _formData['image'] = 'assets/food.jpg';
       }
       _formKey.currentState.save();
-      Product newProduct = Product(
-          title: _formData['title'],
-          description: _formData['description'],
-          price: _formData['price'],
-          imageURL: _formData['image']);
+
       if (selectedProductIndex == null) {
-        addProduct(newProduct);
+        addProduct(
+            _formData['title'],
+            _formData['description'],
+            _formData['price'],
+            _formData['image']);
       } else {
-        updateProduct(newProduct);
+        updateProduct(
+            _formData['title'],
+            _formData['description'],
+            _formData['price'],
+             _formData['image']);
       }
 
       Navigator.pushReplacementNamed(context, '/home');
@@ -166,7 +171,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     //IF we aleady have a product, we are editing a product and must wrap the page in a Scaffold.
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
-        final Widget pageContent = _buildPageContent(context, model.selectedProduct);
+        final Widget pageContent =
+            _buildPageContent(context, model.selectedProduct);
         return model.selectedProductIndex == null
             ? pageContent
             : Scaffold(
