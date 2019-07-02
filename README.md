@@ -1,17 +1,9 @@
-# flutter_course_01
+# Flutter Demo: Store Catalog
 
-A new Flutter project.
+A demo Flutter project for demonstrating an online store. It features the use of Flutter for creating IOS and Android compatible apps, and also demonstrates the use of Scoped Model for state and data management. 
 
 ## Getting Started
 
 This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
-# Flutter-Demo-Store-Catalog
+#### This project is a Work In Progress! Stay tuned for a more fully fledged application, but feel free to take a look and download to try it. 
