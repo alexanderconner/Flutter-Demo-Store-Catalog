@@ -1,69 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import 'package:flutter_course_01/pages/product_edit.dart';
-import '../models/product.dart';
+import '../scoped_models/main_model.dart';
 
 class ProductListPage extends StatelessWidget {
-  final List<Product> products;
-  final Function updateProduct;
-  final Function deleteProduct;
+  ProductListPage();
 
-  ProductListPage({this.updateProduct, this.products, this.deleteProduct});
-
-  Widget _buildEditButton(BuildContext context, int index) {
+  Widget _buildEditButton(
+      BuildContext context, int index, MainModel model) {
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
+        model.selectProduct(index);
         Navigator.of(context).push(
           MaterialPageRoute(builder: (BuildContext context) {
-            return ProductEditPage(
-              updateProduct: updateProduct,
-              product: products[index],
-              productIndex: index,
-            );
+            return ProductEditPage();
           }),
         );
       },
     );
   }
 
-  Widget _buildListTile(BuildContext context, index) {
+  Widget _buildListTile(
+      BuildContext context, MainModel model, int index) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: AssetImage(products[index].imageURL),
+        backgroundImage: AssetImage(model.products[index].imageURL),
       ),
-      title: Text(products[index].title),
-      subtitle: Text('\$${products[index].price}'),
-      trailing: _buildEditButton(context, index),
+      title: Text(model.products[index].title),
+      subtitle: Text('\$${model.products[index].price}'),
+      trailing: _buildEditButton(context, index, model),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        return Dismissible(
-          key: Key(products[index].title),
-          onDismissed: (DismissDirection direction) {
-            if (direction == DismissDirection.endToStart) {
-              deleteProduct(index);
-            } else if (direction == DismissDirection.startToEnd) {
-              print("start  to end");
-            } else {
-              print("other swiping");
-            }
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return Dismissible(
+              key: Key(model.products[index].title),
+              onDismissed: (DismissDirection direction) {
+                if (direction == DismissDirection.endToStart) {
+                  model.selectProduct(index);
+                  model.deleteProduct();
+                } else if (direction == DismissDirection.startToEnd) {
+                  print("start  to end");
+                } else {
+                  print("other swiping");
+                }
+              },
+              direction: DismissDirection.endToStart,
+              background: Container(color: Colors.red),
+              child: Column(
+                children: <Widget>[
+                  _buildListTile(context, model, index),
+                  Divider(),
+                ],
+              ),
+            );
           },
-          direction: DismissDirection.endToStart,
-          background: Container(color: Colors.red),
-          child: Column(
-            children: <Widget>[
-              _buildListTile(context, index),
-              Divider(),
-            ],
-          ),
+          itemCount: model.products.length,
         );
       },
-      itemCount: products.length,
     );
   }
 }

@@ -11,7 +11,7 @@ class ProductManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [Expanded(child: Products(products))],
+      children: [Expanded(child: Products())],
     );
   }
 }
