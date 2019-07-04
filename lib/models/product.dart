@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-//We use final for the properties so that we cannot edit properties of a product other than using the ScopedProductModel Helper methods. 
+//We use final for the properties so that we cannot edit properties of a product other than using the ScopedProductModel Helper methods.
 class Product {
+  final String id;
   final String title;
   final String description;
   final double price;
@@ -11,7 +12,8 @@ class Product {
   final String userId;
 
   Product(
-      {@required this.title,
+      {@required this.id,
+      @required this.title,
       @required this.description,
       @required this.price,
       @required this.imageURL,

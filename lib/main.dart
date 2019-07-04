@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_course_01/widgets/products/products.dart';
-//import 'package:flutter/rendering.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import './pages/auth.dart';
 import 'pages/productsHome.dart';
 import './pages/productAdmin.dart';
 import './pages/product.dart';
-import './scoped_models/scoped_products.dart';
 import './scoped_models/main_model.dart';
 
 
@@ -28,10 +25,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    final MainModel model = MainModel();
     return ScopedModel<MainModel>(
       //Model is the Scoped Model of the Products list which 
       //we instantiate for the entire widget tree (Material App)
-      model: MainModel(),
+      model: model,
       child: MaterialApp(
         //debugShowMaterialGrid: true,
         theme: ThemeData(
@@ -42,7 +40,7 @@ class _MyAppState extends State<MyApp> {
         //home: AuthPage(),
         routes: {
           '/': (BuildContext context) => AuthPage(),
-          '/home': (BuildContext context) => ProductsHomePage(null),
+          '/home': (BuildContext context) => ProductsHomePage(model),
           '/admin': (BuildContext context) => ProductAdminPage(),
           '/auth': (BuildContext context) => AuthPage(),
         },
@@ -61,7 +59,7 @@ class _MyAppState extends State<MyApp> {
         },
         onUnknownRoute: (RouteSettings settings) {
           return MaterialPageRoute(
-              builder: (BuildContext context) => ProductsHomePage(null));
+              builder: (BuildContext context) => ProductsHomePage(model));
         },
       ),
     );

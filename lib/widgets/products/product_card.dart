@@ -29,7 +29,7 @@ class ProductCard extends StatelessWidget {
           builder:
               (BuildContext context, Widget child, MainModel model) {
             return IconButton(
-              icon: Icon(model.products[position].isFavorite
+              icon: Icon(model.allProducts[position].isFavorite
                   ? Icons.favorite
                   : Icons.favorite_border),
               color: Colors.red,
@@ -51,8 +51,8 @@ class ProductCard extends StatelessWidget {
       color: Theme.of(context).cardColor,
       child: Column(
         children: <Widget>[
-          Image.asset(
-              product.imageURL == null ? 'assets/food.jpg' : product.imageURL),
+          Image.network(
+              product.imageURL == null ? ' assets/food.jpg' : product.imageURL),
           //SizedBox(height: 10.0,),
           Container(
             padding: EdgeInsets.only(top: 10),

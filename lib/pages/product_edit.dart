@@ -5,12 +5,10 @@ import '../widgets/helpers/ensure-visible.dart';
 import '../models/product.dart';
 import '../scoped_models/main_model.dart';
 
-/**
- * A form for both adding and updating existing products. 
- * If we are adding a new product, only supply the addProduct argument. 
- * If updating, pass the existing product, its index, and the update Method 
- * to update that product list. 
- */
+/// A form for both adding and updating existing products.
+/// If we are adding a new product, only supply the addProduct argument.
+/// If updating, pass the existing product, its index, and the update Method
+/// to update that product list.
 class ProductEditPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -98,12 +96,19 @@ class _ProductEditPageState extends State<ProductEditPage> {
   Widget _buildSubmitButton() {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
-        return RaisedButton(
-          color: Theme.of(context).accentColor,
-          child: Text("Save Product"),
-          onPressed: () => _submitForm(model.addProduct, model.updateProduct,
-              model.selectedProductIndex),
-        );
+        return model.isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : RaisedButton(
+                color: Theme.of(context).accentColor,
+                child: Text("Save Product"),
+                onPressed: () => _submitForm(
+                    model.addProduct,
+                    model.updateProduct,
+                    model.selectProduct,
+                    model.selectedProductIndex),
+              );
       },
     );
   }
@@ -135,7 +140,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  void _submitForm(Function addProduct, Function updateProduct,
+  void _submitForm(
+      Function addProduct, Function updateProduct, Function setSelectedProduct,
       [int selectedProductIndex]) {
     //if any form field fails validation return, if valid
     //save state and navigate to show the product
@@ -149,20 +155,16 @@ class _ProductEditPageState extends State<ProductEditPage> {
       _formKey.currentState.save();
 
       if (selectedProductIndex == null) {
-        addProduct(
-            _formData['title'],
-            _formData['description'],
-            _formData['price'],
-            _formData['image']);
+        addProduct(_formData['title'], _formData['description'],
+                _formData['price'], _formData['image'])
+            .then((_) {
+          Navigator.pushReplacementNamed(context, '/home')
+              .then((_) => setSelectedProduct(null));
+        });
       } else {
-        updateProduct(
-            _formData['title'],
-            _formData['description'],
-            _formData['price'],
-             _formData['image']);
+        updateProduct(_formData['title'], _formData['description'],
+            _formData['price'], _formData['image']);
       }
-
-      Navigator.pushReplacementNamed(context, '/home');
     }
   }
 

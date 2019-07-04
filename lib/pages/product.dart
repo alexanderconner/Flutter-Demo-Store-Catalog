@@ -49,25 +49,25 @@ class ProductPage extends StatelessWidget {
       builder: (BuildContext context, Widget child, MainModel model) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(model.products[index].title),
+            title: Text(model.allProducts[index].title),
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(model.products[index].imageURL == null
+              Image.asset(model.allProducts[index].imageURL == null
                   ? 'assets/food.jpg'
-                  : model.products[index].imageURL),
+                  : model.allProducts[index].imageURL),
               Container(
-                child: ProductTitle(model.products[index].title),
+                child: ProductTitle(model.allProducts[index].title),
                 padding: EdgeInsets.symmetric(vertical: 10.0),
               ),
               Container(
                 padding: EdgeInsets.all(10),
-                child: _buildAddressPriceRow(context, model.products[index].price),
+                child: _buildAddressPriceRow(context, model.allProducts[index].price),
               ),
               Container(
                 padding: EdgeInsets.all(10),
-                child: Text(model.products[index].description),
+                child: Text(model.allProducts[index].description),
               ),
             ],
           ),

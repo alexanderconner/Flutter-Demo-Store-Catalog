@@ -17,7 +17,9 @@ class ProductListPage extends StatelessWidget {
           MaterialPageRoute(builder: (BuildContext context) {
             return ProductEditPage();
           }),
-        );
+        ).then((_) {
+          model.selectProduct(null);
+        });
       },
     );
   }
@@ -26,7 +28,7 @@ class ProductListPage extends StatelessWidget {
       BuildContext context, MainModel model, int index) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: AssetImage(model.allProducts[index].imageURL),
+        backgroundImage: NetworkImage(model.allProducts[index].imageURL),
       ),
       title: Text(model.allProducts[index].title),
       subtitle: Text('\$${model.allProducts[index].price}'),
@@ -41,7 +43,7 @@ class ProductListPage extends StatelessWidget {
         return ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             return Dismissible(
-              key: Key(model.products[index].title),
+              key: Key(model.allProducts[index].title),
               onDismissed: (DismissDirection direction) {
                 if (direction == DismissDirection.endToStart) {
                   model.selectProduct(index);
@@ -62,7 +64,7 @@ class ProductListPage extends StatelessWidget {
               ),
             );
           },
-          itemCount: model.products.length,
+          itemCount: model.allProducts.length,
         );
       },
     );
