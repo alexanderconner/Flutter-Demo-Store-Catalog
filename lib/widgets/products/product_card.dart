@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import './address_tag.dart';
 import './product_title.dart';
@@ -26,8 +27,7 @@ class ProductCard extends StatelessWidget {
           },
         ),
         ScopedModelDescendant<MainModel>(
-          builder:
-              (BuildContext context, Widget child, MainModel model) {
+          builder: (BuildContext context, Widget child, MainModel model) {
             return IconButton(
               icon: Icon(model.allProducts[position].isFavorite
                   ? Icons.favorite
@@ -51,8 +51,12 @@ class ProductCard extends StatelessWidget {
       color: Theme.of(context).cardColor,
       child: Column(
         children: <Widget>[
-          Image.network(
-              product.imageURL == null ? ' assets/food.jpg' : product.imageURL),
+          FadeInImage.memoryNetwork(
+            height: 300,
+            fit: BoxFit.cover,
+            image: product.imageURL,
+            placeholder: kTransparentImage,
+          ),
           //SizedBox(height: 10.0,),
           Container(
             padding: EdgeInsets.only(top: 10),

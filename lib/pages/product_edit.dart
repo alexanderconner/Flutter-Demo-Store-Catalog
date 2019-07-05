@@ -163,7 +163,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
         });
       } else {
         updateProduct(_formData['title'], _formData['description'],
-            _formData['price'], _formData['image']);
+                _formData['price'], _formData['image'])
+            .then((_) {
+          Navigator.pushReplacementNamed(context, '/home')
+              .then((_) => setSelectedProduct(null));
+        });
       }
     }
   }

@@ -7,8 +7,8 @@ import '../models/product.dart';
 import '../models/user.dart';
 
 mixin ConnectedProductsModel on Model {
-  String firebaseURL =
-      'https://flutter-products-demo-1649e.firebaseio.com/products.json';
+  String firebase_baseURL =
+      'https://flutter-products-demo-1649e.firebaseio.com';
 
   List<Product> _products = [];
   User _authenticatedUser;
@@ -25,11 +25,12 @@ mixin ConnectedProductsModel on Model {
       'image':
           'https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg',
       'price': price,
-      'userEmail' : _authenticatedUser.email,
-      'userId' : _authenticatedUser.id,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id,
     };
     return http
-        .post(firebaseURL, body: json.encode(productData))
+        .post(firebase_baseURL + '/products.json',
+            body: json.encode(productData))
         .then((http.Response response) {
       _isLoading = false;
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -71,23 +72,51 @@ mixin ScopedProductsModel on ConnectedProductsModel {
   }
 
   void deleteProduct() {
+    _isLoading = true;
+    final deletedProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
     _selProductIndex = null;
+
     notifyListeners();
+    http
+        .delete(firebase_baseURL + '/products/${deletedProductId}.json')
+        .then((http.Response respones) {
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 
-  void updateProduct(
+  Future<Null> updateProduct(
       String title, String description, double price, String imageURL) {
-    final Product updatedProduct = Product(
-        title: title,
-        description: description,
-        price: price,
-        imageURL: imageURL,
-        userEmail: selectedProduct.userEmail,
-        userId: selectedProduct.userId);
-    _products[selectedProductIndex] = updatedProduct;
-    _selProductIndex = null;
+    _isLoading = true;
     notifyListeners();
+    final Map<String, dynamic> updateData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg',
+      'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id,
+    };
+
+    return http
+        .put(firebase_baseURL + '/products/${selectedProduct.id}.json',
+            body: json.encode(updateData))
+        .then((http.Response response) {
+      final Product updatedProduct = Product(
+          id: selectedProduct.id,
+          title: title,
+          description: description,
+          price: price,
+          imageURL: imageURL,
+          userEmail: selectedProduct.userEmail,
+          userId: selectedProduct.userId);
+      _products[selectedProductIndex] = updatedProduct;
+      _selProductIndex = null;
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 
   void selectProduct(int index) {
@@ -97,15 +126,17 @@ mixin ScopedProductsModel on ConnectedProductsModel {
     }
   }
 
-  void fetchProducts() {
+  Future<Null> fetchProducts() {
     _isLoading = true;
     notifyListeners();
-    http.get(firebaseURL).then((http.Response response) {
-      _isLoading = false;
+    return http
+        .get(firebase_baseURL + '/products.json')
+        .then((http.Response response) {
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
       print(productListData.toString());
       if (productListData == null) {
+        _isLoading = false;
         notifyListeners();
         return;
       }
@@ -123,6 +154,7 @@ mixin ScopedProductsModel on ConnectedProductsModel {
       });
 
       _products = fetchedProductList;
+      _isLoading = false;
       notifyListeners();
     });
   }

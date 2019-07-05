@@ -35,7 +35,10 @@ class _ProductsHomePageState extends State<ProductsHomePage> {
             child: CircularProgressIndicator(),
           );
         }
-        return content;
+        return RefreshIndicator(
+          child: content,
+          onRefresh: model.fetchProducts,
+        );
       },
     );
   }

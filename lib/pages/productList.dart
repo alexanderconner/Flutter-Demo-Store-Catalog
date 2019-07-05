@@ -4,11 +4,28 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter_course_01/pages/product_edit.dart';
 import '../scoped_models/main_model.dart';
 
-class ProductListPage extends StatelessWidget {
-  ProductListPage();
+class ProductListPage extends StatefulWidget {
+  final MainModel model;
 
-  Widget _buildEditButton(
-      BuildContext context, int index, MainModel model) {
+  ProductListPage(this.model);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ProductListPageState();
+  }
+}
+
+class _ProductListPageState extends State<ProductListPage> {
+
+  @override
+  initState() {
+    widget.model.fetchProducts();
+    super.initState();
+  }
+
+
+
+  Widget _buildEditButton(BuildContext context, int index, MainModel model) {
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
@@ -24,8 +41,7 @@ class ProductListPage extends StatelessWidget {
     );
   }
 
-  Widget _buildListTile(
-      BuildContext context, MainModel model, int index) {
+  Widget _buildListTile(BuildContext context, MainModel model, int index) {
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(model.allProducts[index].imageURL),
